@@ -21,17 +21,17 @@ jobs:
               run: echo "${{ env.DOCKER_LOGIN_PASS }}" | docker login "${{ env.DOCKER_HUB }}" -u "${{ env.DOCKER_LOGIN_NAME }}" --password-stdin
 
             - name: 3. build
-              run: docker build -t registry.cn-hangzhou.aliyuncs.com/epicfish/pay:${GITHUB_SHA::7} -f Dockerfile .
+              run: docker build -t registry.cn-hangzhou.aliyuncs.com/ithrael/website:${GITHUB_SHA::7} -f Dockerfile .
 
             - name: 4. push
-              run: docker push registry.cn-hangzhou.aliyuncs.com/epicfish/pay:${GITHUB_SHA::7}
+              run: docker push registry.cn-hangzhou.aliyuncs.com/ithrael/website:${GITHUB_SHA::7}
 
             - name: 5. k8s set image
               uses: steebchen/kubectl@v2.0.0
               with:
                   config: ${{ secrets.KUBE_CONFIG }}
                   version: v1.22.0
-                  command: set image deployment.v1.apps/pay app=registry-vpc.cn-hangzhou.aliyuncs.com/epicfish/pay:${GITHUB_SHA::7}
+                  command: set image deployment.v1.apps/website app=registry-vpc.cn-hangzhou.aliyuncs.com/ithrael/website:${GITHUB_SHA::7}
 
             - name: 6. update deployment
               uses: steebchen/kubectl@v2.0.0
