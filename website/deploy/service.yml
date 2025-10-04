@@ -1,0 +1,25 @@
+# 安永信息安全官网 Service 配置
+# 用于创建服务并暴露给集群内部和可能的外部访问
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: website-service
+  namespace: default
+  labels:
+    app: website
+    environment: production
+spec:
+  type: ClusterIP
+  selector:
+    app: website
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+      appProtocol: http
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800

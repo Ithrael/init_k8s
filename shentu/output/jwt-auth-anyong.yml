@@ -1,0 +1,16 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: "jwt-anyong"
+  namespace: istio-system
+spec:
+  selector:
+    matchLabels:
+      tier: api
+  jwtRules:
+    - issuer: "anyong"
+      jwks: '{"keys":[{"kty":"RSA","kid":"OGU5MjA5ODYtZDAz","use":"sig","alg":"RS256","n":"oBL_hYFfZhraMXb-ZQcqafBWO32jz3p1Do8Ykkns7XdOowCiumSj4Nb8M2XVHEGS8L2TiYSGbAy3TSi4zd-JHv5vQPDM5JnuauvYwY7MWpbDAvQVCyo5tfR4NK4naHTkH4pfexoszY8w0Mj1CynmllBAR0CZIXNe9TcXtcyBh_UUVB0ObIjAWXrVEWkhxMPq58Nscg2B3cmMBtwwAgZFlAWqDbNpdUjv7uhyEwDovj3hFOGI_6hlW9pASjZI_5bxU5oGD6R3fkPoXGjSQFrtu0d1zTTne8MrZrIJDsMdK_i0BhJ6WTLqqBzkNDJfSS2aEuSlp9DM0d0M5-E1AYXLlw","e":"AQAB"}]}'
+      outputPayloadToHeader: x-jwt-payload
+      fromHeaders:
+        - name: Authorization
+          prefix: "Bearer "

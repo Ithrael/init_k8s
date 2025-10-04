@@ -1,0 +1,115 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: jwt-filter
+  namespace: istio-system
+spec:
+  workloadSelector:
+    # select by label across all namespaces
+    labels:
+      tier: api
+  configPatches:
+    # The Envoy config you want to modify
+    - applyTo: HTTP_FILTER
+      match:
+        context: SIDECAR_INBOUND
+        listener:
+          filterChain:
+            filter:
+              name: "envoy.filters.network.http_connection_manager"
+              subFilter:
+                name: "envoy.filters.http.jwt_authn"
+      patch:
+        operation: INSERT_AFTER
+        value: # lua filter specification
+          name: envoy.filters.http.jwt_authn
+          typed_config:
+            "@type": "type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua"
+            inlineCode: |
+              function envoy_on_request(request_handle)
+                local payload = request_handle:headers():get("X-Jwt-Payload");
+                request_handle:logInfo("原始 X-Jwt-Payload: " .. (payload or "nil"))
+                
+                -- 检查 payload 是否为空
+                if not payload then
+                    request_handle:logInfo("X-Jwt-Payload header is missing or nil")
+                    return
+                end
+                
+                local s = from_base64(payload)
+                -- 打印 s 查看其内容
+                request_handle:logInfo("Decoded JWT payload: " .. s)
+
+                for item in string.gmatch(s, 'NS":"([%w|-]+)"') do
+                    request_handle:headers():add("x-ns", item);
+                    -- 打印 item 查看其内容
+                    request_handle:logInfo("NS: " .. item)
+                end
+                
+                for item in string.gmatch(s, 'UserId":"([%w|-]+)"') do
+                    request_handle:headers():add("x-user-id", item);
+                end
+
+                -- 同时兼容数字和字符串类型的 UserRole
+                for item in string.gmatch(s, "UserRole":(%w+)) do
+                    request_handle:headers():add("x-user-role", item);
+                end
+                for item in string.gmatch(s, "UserRole":"([%w|-]+)") do
+                    request_handle:headers():add("x-user-role", item);
+                end
+
+              end
+
+              function to_binary(integer)
+                  local remaining = tonumber(integer)
+                  local bin_bits = ''
+
+                  for i = 7, 0, -1 do
+                      local current_power = 2 ^ i
+
+                      if remaining >= current_power then
+                          bin_bits = bin_bits .. '1'
+                          remaining = remaining - current_power
+                      else
+                          bin_bits = bin_bits .. '0'
+                      end
+                  end
+
+                  return bin_bits
+              end
+
+              function from_binary(bin_bits)
+                  return tonumber(bin_bits, 2)
+              end
+
+
+              function from_base64(to_decode)
+                  local index_table = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+
+                  local padded = to_decode:gsub("%s", "")
+                  local unpadded = padded:gsub("=", "")
+                  local bit_pattern = ''
+                  local decoded = ''
+
+                  for i = 1, string.len(unpadded) do
+                      local char = string.sub(to_decode, i, i)
+                      local offset, _ = string.find(index_table, char)
+                      if offset == nil then
+                          error("Invalid character '" .. char .. "' found.")
+                      end
+
+                      bit_pattern = bit_pattern .. string.sub(to_binary(offset-1), 3)
+                  end
+
+                  for i = 1, string.len(bit_pattern), 8 do
+                      local byte = string.sub(bit_pattern, i, i+7)
+                      decoded = decoded .. string.char(from_binary(byte))
+                  end
+
+                  local padding_length = padded:len()-unpadded:len()
+
+                  if (padding_length == 1 or padding_length == 2) then
+                      decoded = decoded:sub(1,-2)
+                  end
+                  return decoded
+              end

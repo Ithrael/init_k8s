@@ -9,6 +9,7 @@ metadata:
   labels:
     app: httpbin
     version: latest
+    tier: api
 spec:
   replicas: 1
   selector:
@@ -19,6 +20,7 @@ spec:
       labels:
         app: httpbin
         version: latest
+        tier: api
     spec:
       containers:
         - name: httpbin

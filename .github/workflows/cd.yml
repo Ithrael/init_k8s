@@ -21,10 +21,10 @@ jobs:
               run: echo "${{ env.DOCKER_LOGIN_PASS }}" | docker login "${{ env.DOCKER_HUB }}" -u "${{ env.DOCKER_LOGIN_NAME }}" --password-stdin
 
             - name: 3. build
-              run: docker build -t registry.cn-hangzhou.aliyuncs.com/ithrael/website:${GITHUB_SHA::7} -f website/Dockerfile .
+              run: docker build -t registry.cn-hangzhou.aliyuncs.com/ithrael/website:${GITHUB_SHA::8} -f website/Dockerfile .
 
             - name: 4. push
-              run: docker push registry.cn-hangzhou.aliyuncs.com/ithrael/website:${GITHUB_SHA::7}
+              run: docker push registry.cn-hangzhou.aliyuncs.com/ithrael/website:${GITHUB_SHA::8}
 
             - name: 5. k8s set image
               uses: steebchen/kubectl@v2.0.0

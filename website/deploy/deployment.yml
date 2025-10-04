@@ -1,0 +1,31 @@
+# 安永信息安全官网 Deployment 配置
+# 用于部署静态网站服务
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: website
+  namespace: default
+  labels:
+    app: website
+    version: latest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: website
+  template:
+    metadata:
+      labels:
+        app: website
+        version: latest
+    spec:
+      containers:
+        - name: website
+          # 使用Python官方镜像
+          image: registry.cn-hangzhou.aliyuncs.com/ithrael/website:2ffc9b9
+          # 设置工作目录
+          workingDir: /app
+          args:
+            - python3
+            - /app/app.py
