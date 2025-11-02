@@ -51,10 +51,10 @@ spec:
                 end
 
                 -- 同时兼容数字和字符串类型的 UserRole
-                for item in string.gmatch(s, "UserRole":(%w+)) do
+                for item in string.gmatch(s, '"UserRole":(%w+)') do
                     request_handle:headers():add("x-user-role", item);
                 end
-                for item in string.gmatch(s, "UserRole":"([%w|-]+)") do
+                for item in string.gmatch(s, '"UserRole":"([%w|-]+)"') do
                     request_handle:headers():add("x-user-role", item);
                 end
 

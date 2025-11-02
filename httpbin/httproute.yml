@@ -9,6 +9,9 @@ spec:
       kind: Gateway
       name: ingress-gateway
       namespace: istio-system
+  hostnames:
+    - api.anyongtech.cn
+    - 10.136.191.31
   rules:
     - matches:
         - path:

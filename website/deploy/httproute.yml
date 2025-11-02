@@ -9,13 +9,13 @@ spec:
       kind: Gateway
       name: ingress-gateway
       namespace: istio-system
+  hostnames:
+    - www.anyongtech.cn
   rules:
     - matches:
         - path:
             type: PathPrefix
             value: /
-      hosts:
-      - www.anyongtech.cn
       backendRefs:
         - kind: Service
           name: website-service

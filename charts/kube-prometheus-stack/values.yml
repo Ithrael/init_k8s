@@ -1,0 +1,60 @@
+# monitoring-values.yaml
+grafana:
+  image:
+    # -- The Docker registry
+    registry: registry.cn-hangzhou.aliyuncs.com
+    # -- Docker image repository
+    repository: ithrael_image/grafana
+    # Overrides the Grafana image tag whose default is the chart appVersion
+    tag: "11.3.1"
+  # ingress:
+  #   enable: true
+  #   path: /grafana
+
+kube-state-metrics:
+  image:
+    # -- The Docker registry
+    registry: registry.cn-hangzhou.aliyuncs.com
+    # -- Docker image repository
+    repository: ithrael_image/kube-state-metrics
+    # Overrides the kube-state-metrics image tag whose default is the chart appVersion
+    tag: "v2.14.0"
+# prometheus:
+#   prometheusSpec:
+#     resources:
+#       requests:
+#         cpu: 500m
+#         memory: 512Mi
+#       limits:
+#         cpu: 1000m
+#         memory: 1Gi
+#   service:
+#     type: NodePort
+#     nodePort: 30090
+
+# alertmanager:
+#   service:
+#     type: NodePort
+#     nodePort: 30093
+
+prometheusOperator:
+  enabled: true
+  admissionWebhooks:
+    patch:
+      enabled: true
+      image:
+        registry: registry.cn-hangzhou.aliyuncs.com
+        repository: ithrael_image/kube-webhook-certgen
+        tag: v20221220-controller-v1.5.1-58-g787ea74b6
+        sha: ""
+        pullPolicy: IfNotPresent
+      # 禁用 Istio sidecar 注入
+      podAnnotations:
+        sidecar.istio.io/inject: "false"
+
+# 启用所有组件
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
