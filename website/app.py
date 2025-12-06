@@ -26,6 +26,13 @@ def moments():
     response = make_response(send_from_directory(moments_dir, 'index.html'))
     return add_cache_headers(response, 3600) # 1 hour for HTML
 
+@app.route('/moments/policy')
+@app.route('/moments/policy/')
+def moments_policy():
+    moments_dir = os.path.join(web_dir, 'moments')
+    response = make_response(send_from_directory(moments_dir, 'policy.html'))
+    return add_cache_headers(response, 3600) # 1 hour for HTML
+
 @app.route('/<path:filename>')
 def static_files(filename):
     # Prevent serving app.py itself or hidden files

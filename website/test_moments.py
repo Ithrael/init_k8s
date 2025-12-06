@@ -27,6 +27,16 @@ class TestMomentsPage(unittest.TestCase):
         content = response.data.decode('utf-8')
         self.assertIn("柔光摇篮", content)
 
+    def test_moments_policy_page_exists(self):
+        response = self.client.get('/moments/policy')
+        self.assertEqual(response.status_code, 200)
+        content = response.data.decode('utf-8')
+        self.assertIn("隐私政策", content)
+        self.assertIn("信息收集", content)
+        # Check for key phrases that exist in the HTML
+        self.assertIn("个人身份信息", content)
+        self.assertIn("不会", content)
+
     def test_caching_headers_html(self):
         response = self.client.get('/moments')
         self.assertEqual(response.status_code, 200)
