@@ -16,6 +16,9 @@ spec:
         - path:
             type: PathPrefix
             value: /
+        - path:
+            type: PathPrefix
+            value: /moments
       backendRefs:
         - kind: Service
           name: website-service

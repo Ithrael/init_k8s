@@ -1,55 +1,63 @@
-import http.server
-import socketserver
 import os
 import sys
+from flask import Flask, send_from_directory, abort, make_response
 
-# 设置默认端口
+app = Flask(__name__, static_folder=None)
+
+# Set default port
 DEFAULT_PORT = 80
 
-# 获取当前脚本所在目录作为网站根目录
+# Get current directory
 web_dir = os.path.dirname(os.path.abspath(__file__))
 
-class CustomHandler(http.server.SimpleHTTPRequestHandler):
-    def end_headers(self):
-        # 添加缓存策略
-        if self.path.endswith('.html') or self.path.endswith('/'):
-            # HTML文件缓存1小时
-            self.send_header('Cache-Control', 'public, max-age=3600')
-        elif self.path.endswith(('.css', '.js', '.png', '.jpg', '.svg')):
-            # 静态资源缓存1天
-            self.send_header('Cache-Control', 'public, max-age=86400')
-        else:
-            self.send_header('Cache-Control', 'no-cache')
+def add_cache_headers(response, max_age=3600):
+    response.headers['Cache-Control'] = f'public, max-age={max_age}'
+    return response
+
+@app.route('/')
+def home():
+    response = make_response(send_from_directory(web_dir, 'index.html'))
+    return add_cache_headers(response, 3600) # 1 hour for HTML
+
+@app.route('/moments')
+@app.route('/moments/')
+def moments():
+    moments_dir = os.path.join(web_dir, 'moments')
+    response = make_response(send_from_directory(moments_dir, 'index.html'))
+    return add_cache_headers(response, 3600) # 1 hour for HTML
+
+@app.route('/<path:filename>')
+def static_files(filename):
+    # Prevent serving app.py itself or hidden files
+    if filename == 'app.py' or filename.startswith('.') or '/.' in filename:
+        abort(404)
+    
+    response = make_response(send_from_directory(web_dir, filename))
+    
+    # Add caching based on file extension
+    if filename.endswith(('.css', '.js', '.png', '.jpg', '.svg')):
+        add_cache_headers(response, 86400) # 1 day for assets
+    else:
+        add_cache_headers(response, 0) # No cache for others
         
-        super().end_headers()
+    return response
 
 def main(port=DEFAULT_PORT):
-    os.chdir(web_dir)
-    # 创建请求处理器
-    Handler = CustomHandler
-
-    # 创建 TCP 服务器
     try:
-        with socketserver.TCPServer(("", port), Handler) as httpd:
-            print(f"启动静态网站服务器在 http://localhost:{port}")
-            print(f"网站根目录: {web_dir}")
-            print("按 Ctrl+C 停止服务器")
-            # 启动服务器，持续监听请求
-            httpd.serve_forever()
-    except PermissionError:
-        print(f"错误: 无法绑定到端口 {port}。可能需要管理员权限 (sudo)。")
-        sys.exit(1)
+        print(f"Starting Flask server on http://localhost:{port}")
+        print(f"Root directory: {web_dir}")
+        # In production, use a WSGI server. For this script, app.run is fine.
+        app.run(host='0.0.0.0', port=port)
     except OSError as e:
-        print(f"启动服务器失败: {e}")
+        print(f"Failed to start server: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
-    # 允许通过命令行参数指定端口
     port = DEFAULT_PORT
     if len(sys.argv) > 1:
         try:
             port = int(sys.argv[1])
         except ValueError:
-            print("端口必须是整数")
+            print("Port must be an integer")
             sys.exit(1)
     main(port)
