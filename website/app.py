@@ -33,6 +33,20 @@ def moments_policy():
     response = make_response(send_from_directory(moments_dir, 'policy.html'))
     return add_cache_headers(response, 3600) # 1 hour for HTML
 
+@app.route('/calc')
+@app.route('/calc/')
+def moments():
+    calc_dir = os.path.join(web_dir, 'calc')
+    response = make_response(send_from_directory(calc_dir, 'index.html'))
+    return add_cache_headers(response, 3600) # 1 hour for HTML
+
+@app.route('/calc/policy')
+@app.route('/calc/policy/')
+def calc_policy():
+    calc_dir = os.path.join(web_dir, 'calc')
+    response = make_response(send_from_directory(calc_dir, 'policy.html'))
+    return add_cache_headers(response, 3600) # 1 hour for HTML
+
 @app.route('/<path:filename>')
 def static_files(filename):
     # Prevent serving app.py itself or hidden files
