@@ -19,9 +19,9 @@ def home():
     response = make_response(send_from_directory(web_dir, 'index.html'))
     return add_cache_headers(response, 3600) # 1 hour for HTML
 
-@app.route('/moments')
-@app.route('/moments/')
-def moments():
+@app.route('/moments/support')
+@app.route('/moments/support/')
+def moments_support():
     moments_dir = os.path.join(web_dir, 'moments')
     response = make_response(send_from_directory(moments_dir, 'index.html'))
     return add_cache_headers(response, 3600) # 1 hour for HTML
@@ -33,9 +33,9 @@ def moments_policy():
     response = make_response(send_from_directory(moments_dir, 'policy.html'))
     return add_cache_headers(response, 3600) # 1 hour for HTML
 
-@app.route('/calc')
-@app.route('/calc/')
-def calc():
+@app.route('/calc/support')
+@app.route('/calc/support/')
+def calc_support():
     calc_dir = os.path.join(web_dir, 'calc')
     response = make_response(send_from_directory(calc_dir, 'index.html'))
     return add_cache_headers(response, 3600) # 1 hour for HTML

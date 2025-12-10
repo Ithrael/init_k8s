@@ -108,6 +108,52 @@
             border-left: 4px solid var(--primary-color);
         }
 
+        .feedback-form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+
         .faq-item {
             margin-bottom: 20px;
             border-bottom: 1px solid #eee;
@@ -175,8 +221,39 @@
             <p>如果您在使用过程中遇到任何问题，或有任何建议，欢迎通过以下方式联系我们。我们的支持团队通常会在24小时内回复。</p>
             <div class="contact-info">
                 <p><strong>📧 客服邮箱：</strong> support@anyong.cn</p>
-                <p><strong>📞 支持电话：</strong> +86 0631-1234567</p>
-                <p><strong>🏢 公司地址：</strong> 山东省威海市火炬高技术产业开发区</p>
+            </div>
+
+            <div class="feedback-form">
+                <h3>在线反馈</h3>
+                <form id="feedbackForm" action="mailto:support@anyong.cn" method="post" enctype="text/plain">
+                    <div class="form-group">
+                        <label for="problem">请描述您的问题：</label>
+                        <textarea id="problem" name="problem" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">您的姓名：</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">您的邮箱：</label>
+                        <input type="email" id="email" name="email" placeholder="user@gmail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">您的电话号码：</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+86 12345678900">
+                    </div>
+
+                    <button type="submit" class="submit-btn">提交反馈</button>
+                </form>
+                
+                <script>
+                    document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+                        setTimeout(function() {
+                            alert('反馈成功！感谢您的意见。');
+                            document.getElementById('feedbackForm').reset();
+                        }, 500);
+                    });
+                </script>
             </div>
         </section>
 

@@ -89,6 +89,52 @@
             border-left: 4px solid var(--primary-color);
         }
 
+        .feedback-form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+
         .faq-item {
             margin-bottom: 20px;
             border-bottom: 1px solid #eee;
@@ -146,19 +192,45 @@
             <h2>联系与支持</h2>
             <p>如果您在使用过程中遇到任何问题，或有任何建议，欢迎通过以下方式联系我们。我们的支持团队通常会在24小时内回复。</p>
             <div class="contact-info">
-                <p><strong>📧 客服邮箱：</strong> support@anyong.cn</p>
-                <p><strong>📞 支持电话：</strong> +86 0631-1234567</p>
-                <p><strong>🏢 公司地址：</strong> 山东省威海市火炬高技术产业开发区</p>
+                <p><strong>📧 客服邮箱：</strong> <a href="mailto:support@anyong.cn">support@anyong.cn</a></p>
+            </div>
+
+            <div class="feedback-form">
+                <h3>在线反馈</h3>
+                <form id="feedbackForm" action="mailto:support@anyong.cn" method="post" enctype="text/plain">
+                    <div class="form-group">
+                        <label for="problem">请描述您的问题：</label>
+                        <textarea id="problem" name="problem" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">您的姓名：</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">您的邮箱：</label>
+                        <input type="email" id="email" name="email" placeholder="user@gmail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">您的电话号码：</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+86 12345678900">
+                    </div>
+
+                    <button type="submit" class="submit-btn">提交反馈</button>
+                </form>
+
+                <script>
+                    document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+                        setTimeout(function() {
+                            alert('反馈成功！感谢您的意见。');
+                            document.getElementById('feedbackForm').reset();
+                        }, 500);
+                    });
+                </script>
             </div>
         </section>
 
         <section id="faq">
             <h2>常见问题 (FAQ)</h2>
-
-            <div class="faq-item">
-                <div class="question">Q: 如何恢复购买？</div>
-                <div class="answer">A: 在应用设置页面，点击“恢复购买”按钮即可恢复您之前的内购项目。请确保您登录的是购买时使用的Apple ID。</div>
-            </div>
 
             <div class="faq-item">
                 <div class="question">Q: 音频可以在后台播放吗？</div>
@@ -167,7 +239,7 @@
 
             <div class="faq-item">
                 <div class="question">Q: 应用是否收集个人隐私数据？</div>
-                <div class="answer">A: 我们非常重视您的隐私。应用仅在本地存储您的使用偏好，不会上传任何个人敏感信息。详细信息请参阅我们的隐私政策。</div>
+                <div class="answer">A: 我们非常重视您的隐私。应用仅在本地存储您的使用偏好，不会上传任何个人敏感信息。详细信息请参阅我们的<a href="/moments/policy">隐私政策</a>。</div>
             </div>
         </section>
     </div>
