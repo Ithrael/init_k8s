@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全跳转中...</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .loading {
+            margin: 30px 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #07C160;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="spinner"></div>
+    <div class="loading">正在为您安全跳转到目标网站...</div>
+
+    <script>
+        const JUMP_URL = "https://ifz0flm7.ev.wei-scrm.cn/web/h5/v2rank/index.html#/form?formId=1998568725981884418&spreadId=1999298100687241218&corpId=wp9CczDgAAuzKQsxCEAB1YgKFgjAbYgg&staffId=";
+
+        function getTargetUrl() {
+            return JUMP_URL;
+        }
+
+        // 3. 执行跳转
+        function redirect() {
+            const targetUrl = getTargetUrl();
+            if (targetUrl) {
+                console.log('跳转到:', targetUrl);
+                // 可在此添加统计代码
+                // if (window._hmt) _hmt.push(['_trackPageview', targetUrl]);
+
+                // 延迟500ms跳转，让用户看到加载状态
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 500);
+            } else {
+                document.querySelector('.loading').innerHTML =
+                    '<p style="color: #e64340;">跳转链接无效或已过期</p>' +
+                    '<p><a href="https://www.your-miniprogram.com">返回小程序</a></p>';
+            }
+        }
+
+        // 4. 页面加载后执行
+        document.addEventListener('DOMContentLoaded', redirect);
+
+        // 5. 备用方案：如果5秒后还没跳转，显示手动跳转链接
+        setTimeout(() => {
+            const targetUrl = getTargetUrl();
+            if (targetUrl && window.location.href.indexOf(targetUrl) === -1) {
+                document.body.innerHTML +=
+                    `<p><a href="${targetUrl}" style="color: #07C160;">如果长时间没有跳转，请点击这里</a></p>`;
+            }
+        }, 5000);
+    </script>
+
+    <!-- 备用Meta Refresh（确保JavaScript失效时仍能跳转） -->
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=https://fallback.yourcompany.com">
+        <p>您的浏览器不支持JavaScript，<a href="https://fallback.yourcompany.com">请点击这里继续</a></p>
+    </noscript>
+</body>
+
+</html>

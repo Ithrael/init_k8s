@@ -23,6 +23,11 @@ def home():
 def wechat_check():
     return "220e078cefb5035c946d9d45559b0342"
 
+@app.route('/jump')
+def jump():
+    response = make_response(send_from_directory(web_dir, 'jump.html'))
+    return add_cache_headers(response, 0) # No cache for jump page
+
 @app.route('/moments/support')
 @app.route('/moments/support/')
 def moments_support():
