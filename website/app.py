@@ -19,6 +19,10 @@ def home():
     response = make_response(send_from_directory(web_dir, 'index.html'))
     return add_cache_headers(response, 3600) # 1 hour for HTML
 
+@app.route('/KgrTsc4qPj.txt')
+def wechat_check():
+    return "220e078cefb5035c946d9d45559b0342"
+
 @app.route('/moments/support')
 @app.route('/moments/support/')
 def moments_support():
@@ -39,6 +43,7 @@ def calc_support():
     calc_dir = os.path.join(web_dir, 'calc')
     response = make_response(send_from_directory(calc_dir, 'index.html'))
     return add_cache_headers(response, 3600) # 1 hour for HTML
+
 
 @app.route('/calc/policy')
 @app.route('/calc/policy/')
